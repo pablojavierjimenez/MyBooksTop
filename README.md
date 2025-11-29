@@ -6,8 +6,13 @@
 cd Docker_DB
 docker compose up -d
 
-cd ..
+cd apps/api-rest
 pnpm run start:dev
+# http://localhost:7000/api/
+
+cd apps/bff-graphql
+pnpm run start:dev
+# http://localhost:9000/api/
 ```
 
 ### entorno:
