@@ -1,0 +1,5 @@
+# Ignorar todo dentro de /db
+db/*
+
+# Pero NO ignorar el .gitkeep
+!db/.gitkeep

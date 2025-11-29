@@ -1,6 +1,14 @@
 # MyBooksTop
 
-NestJS Project : MyBooksTop
+## Quick Start
+
+```bash
+cd Docker_DB
+docker compose up -d
+
+cd ..
+pnpm run start:dev
+```
 
 ### entorno:
 
@@ -14,6 +22,7 @@ npm -v
 pnpm -v
 # -> 10.21.0
 
+# NestJS Backend Project : MyBooksTop
 MyBooksTop/
 ├── apps/
 │   ├── api/
@@ -23,3 +32,27 @@ MyBooksTop/
 ├── pnpm-workspace.yaml
 └── nest-cli.json
 ```
+
+## Run Docker (Postgres Data Base and PGAdmin)
+
+- [**PostgreSQL + pgAdmin con Docker Compose - And Comands**](./README.md)
+
+```bash
+cd Docker_DB
+
+# Run Docker compose
+docker compose up -d
+
+# Stop Docker compose
+docker compose down
+```
+
+### PGAdmin
+
+_**Nota:** firt check the enviroment variables value on `/Docker_D/.env` file, to confirm Ports, and user login values._
+
+you can use your favorite SQL client App, but also you can use `PGAdmin` a postgres web client.
+Test on [http://localhost:8081/](http://localhost:8081/),
+
+- _UserMail:_ `admin@mail.com`
+- _Password:_ `adminPass`
