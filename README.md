@@ -40,7 +40,7 @@ MyBooksTop/
 
 ## Run Docker (Postgres Data Base and PGAdmin)
 
-- [**PostgreSQL + pgAdmin con Docker Compose - And Comands**](./README.md)
+- [**PostgreSQL + pgAdmin con Docker Compose - And Comands**](./Docker_DB/README.md)
 
 ```bash
 cd Docker_DB
