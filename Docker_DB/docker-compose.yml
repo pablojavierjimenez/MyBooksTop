@@ -1,23 +1,28 @@
 services:
   db:
-    container_name: ${DB_NAME}
-    image: postgres:16
+    container_name: ${DK_MARIADB_CONTAINER_NAME}
+    image: mariadb:10.11
     ports:
-      - "${POSTGRES_HOST_PORT:-5432}:5432"
+      - "${DK_MARIADB_HOST_PORT:-3306}:3306"
     volumes:
-      - ./db/postgres:/var/lib/postgresql/data
+      - ./db/mariadb:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE_NAME}
+      MARIADB_USER: ${MARIADB_USER_NAME}
+      MARIADB_PASSWORD: ${MARIADB_USER_PASSWORD}
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:5.2
     ports:
-      - "${PGADMIN_HOST_PORT:-8081}:80"
+      - "${PHPMYADMIN_HOST_PORT:-8082}:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${MARIADB_USER_NAME}
+      PMA_PASSWORD: ${MARIADB_USER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     depends_on:
       - db
