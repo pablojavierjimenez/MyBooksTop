@@ -1,9 +1,9 @@
-# PostgreSQL + pgAdmin con Docker Compose
+# MariaDB + phpMyAdmin con Docker Compose
 
-- [**Postgres - Docu**](https://www.postgresql.org/docs/)
-- [**PgAdmin - Docu**](https://www.pgadmin.org/docs/pgadmin4/9.10/index.html)
-- [**Postgres on DockerHub**](https://hub.docker.com/_/postgres)
-- [**PgAdmin on DockerHub**](https://hub.docker.com/r/dpage/pgadmin4)
+- [**MariaDB - Docu**](https://mariadb.org/documentation/)
+- [**PhpMyAdmin - Docu**](https://www.phpmyadmin.net/docs/)
+- [**MariaDB on DockerHub**](https://hub.docker.com/_/mariadb)
+- [**PhpMyAdmin on DockerHub**](https://hub.docker.com/_/phpmyadmin)
 
 ## Comandos útiles
 
@@ -14,11 +14,11 @@ docker-compose up -d
 # Ver logs
 docker-compose logs -f
 
-# Ver logs solo de PostgreSQL
+# Ver logs solo de MariaDB
 docker-compose logs -f db
 
-# Ver logs solo de pgAdmin
-docker-compose logs -f pgadmin
+# Ver logs solo de phpMyAdmin
+docker-compose logs -f phpmyadmin
 
 # Detener los servicios
 docker-compose down
@@ -26,54 +26,45 @@ docker-compose down
 # Detener y eliminar volúmenes (¡cuidado! elimina los datos)
 docker-compose down -v
 
-# Conectarse a PostgreSQL desde el host
-psql -h localhost -p 5432 -U test-user -d world-db
+# Conectarse a MariaDB desde el host
+mysql -h localhost -P 3306 -u test-user -p
 # Contraseña: testPass
 
-# Conectarse directamente al contenedor de PostgreSQL
-docker exec -it postgres-db psql -U test-user -d world-db
+# Conectarse como root desde el host
+mysql -h localhost -P 3306 -u root -p
+# Contraseña: rootPass
+
+# Conectarse directamente al contenedor de MariaDB
+docker exec -it mariadb-db mysql -u test-user -p
 ```
 
 ## Variables de entorno (.env)
 
-### Configuración de PostgreSQL
+### Configuración de MariaDB
 
-- **POSTGRES_USER**: Usuario de PostgreSQL (no root, es el usuario principal de la base de datos)
-- **POSTGRES_PASSWORD**: Contraseña del usuario de PostgreSQL
-- **POSTGRES_DATABASE**: Nombre de la base de datos que se creará automáticamente al iniciar
-- **DB_NAME**: Nombre del contenedor de PostgreSQL
+- **MARIADB_ROOT_PASSWORD**: Contraseña del usuario root de MariaDB (obligatoria)
+- **MARIADB_USER**: Usuario adicional de MariaDB que se creará automáticamente
+- **MARIADB_PASSWORD**: Contraseña del usuario adicional
+- **MARIADB_DATABASE**: Nombre de la base de datos que se creará automáticamente al iniciar
+- **DB_NAME**: Nombre del contenedor de MariaDB
 
 ### Configuración adicional
 
 - **DB_HOST**: Host de la base de datos (localhost para conectarse desde el host)
-- **DB_PORT**: Puerto interno de PostgreSQL (5432 por defecto)
+- **DB_PORT**: Puerto interno de MariaDB (3306 por defecto)
 
 ### Puertos de exposición al host
 
-- **POSTGRES_HOST_PORT**: Puerto en el host para acceder a PostgreSQL (5432 por defecto)
-- **PGADMIN_HOST_PORT**: Puerto en el host para acceder a pgAdmin (8080 por defecto)
+- **MARIADB_HOST_PORT**: Puerto en el host para acceder a MariaDB (3306 por defecto)
+- **PHPMYADMIN_HOST_PORT**: Puerto en el host para acceder a phpMyAdmin (8082 por defecto)
 
-### Configuración de pgAdmin
+## Acceso a phpMyAdmin
 
-- **PGADMIN_EMAIL**: Email para iniciar sesión en pgAdmin (usado como nombre de usuario)
-- **PGADMIN_PASSWORD**: Contraseña para iniciar sesión en pgAdmin
-
-## Acceso a pgAdmin
-
-1. Accede a http://localhost:8081
-2. Inicia sesión con:
-   - Email: `admin@admin.com`
-   - Contraseña: `adminPass`
-3. Para conectar a PostgreSQL desde pgAdmin:
-   - Click derecho en "Servers" → "Register" → "Server"
-   - **General Tab**:
-     - Name: postgres-db (o el nombre que prefieras)
-   - **Connection Tab**:
-     - Host: `db` (nombre del servicio en docker-compose)
-     - Port: `5432`
-     - Username: `test-user`
-     - Password: `testPass`
-     - Save password: ✓
+1. Accede a http://localhost:8082
+2. phpMyAdmin se conecta automáticamente al servidor MariaDB
+3. Inicia sesión con:
+   - **Usuario**: `test-user` (o `root` para acceso completo)
+   - **Contraseña**: `testPass` (o `rootPass` si usas root)
 
 ## Configuración de volúmenes
 
@@ -81,38 +72,70 @@ docker exec -it postgres-db psql -U test-user -d world-db
 
 ```yaml
 volumes:
-  - ./db/postgres:/var/lib/postgresql/data
+  - ./db/mariadb:/var/lib/mysql
 ```
 
-Los datos se guardan en la carpeta `./postgres` de tu proyecto.
+Los datos se guardan en la carpeta `./mariadb` de tu proyecto.
 
 ### Opción alternativa (volumen de Docker):
 
 ```yaml
 volumes:
-  - postgres-db:/var/lib/postgresql/data
+  - mariadb-db:/var/lib/mysql
 ```
 
 Los datos se guardan en un volumen gestionado por Docker. Requiere declarar el volumen al final del archivo:
 
 ```yaml
 volumes:
-  postgres-db:
+  mariadb-db:
 ```
 
-## Diferencias clave con MariaDB/MySQL
+## Características de MariaDB
 
-1. **Puerto por defecto**: PostgreSQL usa el puerto `5432` en lugar de `3306`
+MariaDB es un fork de MySQL con las siguientes características:
+
+- **Compatible con MySQL**: Sintaxis y comandos idénticos
+- **Open Source**: Totalmente libre, sin restricciones de licencia
+- **Rendimiento**: Optimizaciones de rendimiento adicionales
+- **Motores de almacenamiento**: Más opciones que MySQL (Aria, ColumnStore, etc.)
+- **Desarrollo activo**: Actualizaciones más frecuentes que MySQL
+
+## Diferencias entre MariaDB y MySQL
+
+| Característica            | MariaDB          | MySQL              |
+| ------------------------- | ---------------- | ------------------ |
+| Licencia                  | GPL 100%         | GPL + Propietaria  |
+| Desarrollo                | Comunidad        | Oracle Corporation |
+| Compatibilidad            | Alta con MySQL   | Alta con MariaDB   |
+| Motores de almacenamiento | Más opciones     | Estándar           |
+| JSON                      | Soporte completo | Soporte completo   |
+
+## Diferencias clave con PostgreSQL
+
+1. **Puerto por defecto**: MariaDB/MySQL usa el puerto `3306` en lugar de `5432`
 2. **Variables de entorno**:
-   - `POSTGRES_USER` - Usuario principal (no existe "root" en PostgreSQL)
-   - `POSTGRES_PASSWORD` - Contraseña del usuario principal
-   - `POSTGRES_DB` - Crea automáticamente una base de datos al iniciar
-3. **Bind volume**: `./db/postgres:/var/lib/postgresql/data` (en lugar de mysql)
-4. **pgAdmin** en lugar de phpMyAdmin - Herramienta de administración web para PostgreSQL
+   - `MARIADB_ROOT_PASSWORD` - Contraseña del usuario root (obligatoria)
+   - `MARIADB_DATABASE` - Crea automáticamente una base de datos al iniciar
+   - `MARIADB_USER` y `MARIADB_PASSWORD` - Crea un usuario adicional con permisos en la BD
+3. **Bind volume**: `./mariadb:/var/lib/mysql` (en lugar de postgresql)
+4. **phpMyAdmin** en lugar de pgAdmin - Herramienta de administración web específica para MySQL/MariaDB
+
+## Ventajas de phpMyAdmin
+
+- **Conexión automática**: Se configura con variables de entorno, no requiere configuración manual
+- **Interfaz familiar**: La herramienta más usada para administrar MySQL/MariaDB
+- **Funciones completas**: Gestión de bases de datos, tablas, usuarios, importación/exportación
+- **Diseñador visual**: Permite crear diagramas ER de las bases de datos
+- **Búsqueda global**: Busca en todas las tablas y bases de datos
 
 ## Notas importantes
 
-- El directorio `./db/postgres` se creará automáticamente la primera vez que ejecutes `docker-compose up`
-- pgAdmin requiere que configures manualmente la conexión al servidor PostgreSQL la primera vez (ver sección "Acceso a pgAdmin")
-- Para producción, considera usar volúmenes de Docker en lugar de bind mounts para mejor rendimiento
+- El directorio `./mariadb` se creará automáticamente la primera vez que ejecutes `docker-compose up`
+- phpMyAdmin se conecta automáticamente al contenedor `db` mediante el nombre del servicio
+- El usuario `test-user` tiene permisos completos sobre la base de datos `world-db`
+- El usuario `root` tiene acceso completo a todas las bases de datos
+- Para producción, considera usar volúmenes de Docker en lugar de bind mounts
 - Cambia las contraseñas en el archivo `.env` antes de usar en producción
+- Si prefieres MySQL, cambia `image: mariadb:10.11` por `image: mysql:8.0` en el docker-compose
+- Puedes usar el cliente `mysql` para conectarte a MariaDB (son compatibles)
