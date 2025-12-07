@@ -46,7 +46,7 @@ PATCH http://localhost:7000/api/v1/user/1
 Content-Type: application/json
 
 {
-  "username": "homerTompson"
+  "username": "homerRompson"
 }
 
 # ------------------------------------------
