@@ -21,4 +21,13 @@ export class UserCreateDto implements UserInterface {
   @IsNotEmpty()
   @MinLength(6)
   password: string;
+
+  // @ApiProperty({
+  //   description: 'Correo electrónico único del usuario',
+  //   example: 'homer@springfield.com',
+  // })
+  // @IsString()
+  // @IsEmail()
+  // @IsNotEmpty()
+  // email: string;
 }

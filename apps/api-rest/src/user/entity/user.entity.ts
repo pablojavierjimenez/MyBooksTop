@@ -9,7 +9,7 @@ export class UserEntity implements UserInterface {
     description: 'UUID auto generado del usuario',
     example: '044b226c-58f9-40ec-9afd-91f8f5b9bb35',
   })
-  @PrimaryGeneratedColumn('uuid')
+  @Column({ type: 'uuid', default: () => 'UUID()' })
   uuid: string;
 
   @ApiProperty({
@@ -18,6 +18,7 @@ export class UserEntity implements UserInterface {
   })
   @Generated('increment')
   @Column({ unique: true })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty({

@@ -1,10 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    GraphQLModule.forRoot<YogaDriverConfig>({
+      driver: YogaDriver,
+      autoSchemaFile: 'schema.graphql', // <-- genera schema dinamico
+      graphiql: true,
+      sortSchema: true,
+    }),
+
+    UsersModule,
+  ],
 })
 export class AppModule {}

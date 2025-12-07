@@ -1,0 +1,18 @@
+{
+  "cSpell.words": [
+    "firstname"
+  ],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": "explicit"
+  },
+  // "editor.quickSuggestions": false,
+  // "editor.suggestOnTriggerCharacters": false,
+  // "editor.wordBasedSuggestions": false,
+  // "editor.parameterHints.enabled": false,
+  // "editor.inlineSuggest.enabled": false,
+  // "editor.hover.enabled": false,
+  // "typescript.suggest.enabled": false,
+  // "javascript.suggest.enabled": false,
+  // "editor.lightbulb.enabled": false
+}
